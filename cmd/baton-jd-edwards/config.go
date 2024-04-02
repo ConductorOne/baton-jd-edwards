@@ -36,7 +36,7 @@ func validateConfig(ctx context.Context, cfg *config) error {
 
 // cmdFlags sets the cmdFlags required for the connector.
 func cmdFlags(cmd *cobra.Command) {
-	cmd.PersistentFlags().String("ais-url", "", "Your JD Edwards Application Interface Service (AIS) Server REST API url. Provided url should contain port. (e.g: https://your_ais_server:port)($BATON_AIS_URL)")
+	cmd.PersistentFlags().String("ais-url", "", "Your JD Edwards AIS Server REST API url. Provided url should contain port. (e.g: https://your_ais_server:port)($BATON_AIS_URL)")
 	cmd.PersistentFlags().String("username", "", "JD Edwards EnterpriseOne username. ($BATON_USERNAME)")
 	cmd.PersistentFlags().String("password", "", "JD Edwards EnterpriseOne password. ($BATON_PASSWORD)")
 }

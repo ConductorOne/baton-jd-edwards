@@ -17,7 +17,7 @@ const (
 	dataservice  = "dataservice"
 	tokenrequest = "tokenrequest"
 
-	applicationJson = "application/json"
+	applicationJSON = "application/json"
 )
 
 type Client struct {
@@ -95,8 +95,8 @@ func Authenticate(ctx context.Context, ais, username, password string) (string, 
 		return "", err
 	}
 
-	req.Header.Add("Accept", applicationJson)
-	req.Header.Add("Content-Type", applicationJson)
+	req.Header.Add("Accept", applicationJSON)
+	req.Header.Add("Content-Type", applicationJSON)
 
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -217,8 +217,8 @@ func (c *Client) doRequest(ctx context.Context, method string, url string, res i
 		return fmt.Errorf("error creating request: %w", err)
 	}
 
-	req.Header.Add("Accept", applicationJson)
-	req.Header.Add("Content-Type", applicationJson)
+	req.Header.Add("Accept", applicationJSON)
+	req.Header.Add("Content-Type", applicationJSON)
 	req.Header.Add("jde-AIS-Auth", c.token)
 
 	resp, err := c.httpClient.Do(req)
