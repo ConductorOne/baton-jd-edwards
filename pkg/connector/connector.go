@@ -2,43 +2,60 @@ package connector
 
 import (
 	"context"
-	"io"
+	"fmt"
 
+	"github.com/conductorone/baton-jd-edwards/pkg/jde"
 	v2 "github.com/conductorone/baton-sdk/pb/c1/connector/v2"
 	"github.com/conductorone/baton-sdk/pkg/annotations"
 	"github.com/conductorone/baton-sdk/pkg/connectorbuilder"
+	"github.com/conductorone/baton-sdk/pkg/uhttp"
+	"github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap"
 )
 
-type Connector struct{}
+type Connector struct {
+	client *jde.Client
+}
 
 // ResourceSyncers returns a ResourceSyncer for each resource type that should be synced from the upstream service.
 func (d *Connector) ResourceSyncers(ctx context.Context) []connectorbuilder.ResourceSyncer {
 	return []connectorbuilder.ResourceSyncer{
-		newUserBuilder(),
+		newUserBuilder(d.client),
+		newRoleBuilder(d.client),
 	}
-}
-
-// Asset takes an input AssetRef and attempts to fetch it using the connector's authenticated http client
-// It streams a response, always starting with a metadata object, following by chunked payloads for the asset.
-func (d *Connector) Asset(ctx context.Context, asset *v2.AssetRef) (string, io.ReadCloser, error) {
-	return "", nil, nil
 }
 
 // Metadata returns metadata about the connector.
 func (d *Connector) Metadata(ctx context.Context) (*v2.ConnectorMetadata, error) {
 	return &v2.ConnectorMetadata{
-		DisplayName: "My Baton Connector",
-		Description: "The template implementation of a baton connector",
+		DisplayName: "JD Edwards Connector",
+		Description: "Connector syncing users and roles from JD Edwards EnterpriseOne.",
 	}, nil
 }
 
 // Validate is called to ensure that the connector is properly configured. It should exercise any API credentials
 // to be sure that they are valid.
 func (d *Connector) Validate(ctx context.Context) (annotations.Annotations, error) {
+	_, err := d.client.ValidateToken(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("error validating token: %w", err)
+	}
+
 	return nil, nil
 }
 
 // New returns a new instance of the connector.
-func New(ctx context.Context) (*Connector, error) {
-	return &Connector{}, nil
+func New(ctx context.Context, aisUrl, username, password string) (*Connector, error) {
+	httpClient, err := uhttp.NewClient(ctx, uhttp.WithLogger(true, ctxzap.Extract(ctx)))
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := jde.Authenticate(ctx, aisUrl, username, password)
+	if err != nil {
+		return nil, fmt.Errorf("error authenticating: %w", err)
+	}
+
+	return &Connector{
+		client: jde.NewClient(httpClient, aisUrl, token),
+	}, nil
 }
