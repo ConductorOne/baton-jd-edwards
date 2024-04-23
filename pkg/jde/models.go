@@ -47,23 +47,46 @@ type Summary struct {
 
 type UsersResponse struct {
 	Resource Resource `json:"fs_DATABROWSE_F0092"`
+	Links    []Link   `json:"links,omitempty"`
 }
 
 type RolesResponse struct {
 	Resource Resource `json:"fs_DATABROWSE_F00926"`
+	Links    []Link   `json:"links,omitempty"`
 }
 
 type RoleUsersResponse struct {
 	Resource Resource `json:"fs_DATABROWSE_F95921"`
+	Links    []Link   `json:"links,omitempty"`
 }
 
 type ValidateTokenResponse struct {
-	IsValidSession bool  `json:"isValidSession,omitempty"`
-	Error          Error `json:"error,omitempty"`
+	IsValidSession bool   `json:"isValidSession,omitempty"`
+	Message        string `json:"message,omitempty"`
+	Exception      string `json:"exception,omitempty"`
+	TimeStamp      string `json:"timeStamp,omitempty"`
 }
 
-type Error struct {
-	Message   string `json:"message"`
-	Exception string `json:"exception"`
-	TimeStamp string `json:"timeStamp"`
+type ConfigResponse struct {
+	JasHost                   string           `json:"jasHost,omitempty"`
+	JasPort                   string           `json:"jasPort,omitempty"`
+	JasProtocol               string           `json:"jasProtocol,omitempty"`
+	DefaultEnvironment        string           `json:"defaultEnvironment,omitempty"`
+	DefaultRole               string           `json:"defaultRole,omitempty"`
+	AisVersion                string           `json:"aisVersion,omitempty"`
+	CapabilityList            []CapabilityList `json:"capabilityList,omitempty"`
+	RequiredCapabilityMissing bool             `json:"requiredCapabilityMissing,omitempty"`
+}
+
+type CapabilityList struct {
+	Name             string `json:"name,omitempty"`
+	ShortDescription string `json:"shortDescription,omitempty"`
+	LongDescription  string `json:"longDescription,omitempty"`
+	AsOfRelease      string `json:"asOfRelease,omitempty"`
+	SinceVersion     string `json:"sinceVersion,omitempty"`
+}
+
+type Link struct {
+	Rel  string `json:"rel"`
+	Href string `json:"href"`
 }

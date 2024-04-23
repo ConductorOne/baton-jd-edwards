@@ -63,9 +63,10 @@ Available Commands:
   help               Help about any command
 
 Flags:
-      --ais-url string         Your JD Edwards Application Interface Service (AIS) Server REST API url. Provided url should contain port. (e.g: https://your_ais_server:port)($BATON_AIS_URL)
+      --ais-url string         Your JD Edwards AIS Server REST API url. Provided url should contain port. (e.g: https://your_ais_server:port)($BATON_AIS_URL)
       --client-id string       The client ID used to authenticate with ConductorOne ($BATON_CLIENT_ID)
       --client-secret string   The client secret used to authenticate with ConductorOne ($BATON_CLIENT_SECRET)
+      --env string             Environment to use for login. If not specified, the default environment configured for the AIS Server will be used. ($BATON_ENV)
   -f, --file string            The path to the c1z file to sync with ($BATON_FILE) (default "sync.c1z")
   -h, --help                   help for baton-jd-edwards
       --log-format string      The output format for logs: json, console ($BATON_LOG_FORMAT) (default "json")

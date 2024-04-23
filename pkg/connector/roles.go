@@ -49,13 +49,40 @@ func roleResource(role, roleDescription string) (*v2.Resource, error) {
 }
 
 func (r *roleBuilder) List(ctx context.Context, parentResourceID *v2.ResourceId, pToken *pagination.Token) ([]*v2.Resource, string, annotations.Annotations, error) {
-	roles, err := r.client.ListRoles(ctx)
+	bag, page, isInitial, err := parsePageToken(pToken.Token, &v2.ResourceId{ResourceType: roleResourceType.Id})
 	if err != nil {
-		return nil, "", nil, fmt.Errorf("error fetching roles: %w", err)
+		return nil, "", nil, err
+	}
+
+	var allRoles []jde.Columns
+	var nextToken string
+
+	if page == "" && isInitial {
+		roles, nextUrl, err := r.client.ListRoles(ctx, "100")
+		if err != nil {
+			return nil, "", nil, fmt.Errorf("error fetching roles: %w", err)
+		}
+		allRoles = append(allRoles, roles...)
+
+		nextToken, err = bag.NextToken(nextUrl)
+		if err != nil {
+			return nil, "", nil, err
+		}
+	} else {
+		roles, nextUrl, err := r.client.FetchMoreRoles(ctx, page)
+		if err != nil {
+			return nil, "", nil, fmt.Errorf("error fetching roles: %w", err)
+		}
+		allRoles = append(allRoles, roles...)
+
+		nextToken, err = bag.NextToken(nextUrl)
+		if err != nil {
+			return nil, "", nil, err
+		}
 	}
 
 	var rv []*v2.Resource
-	for _, role := range roles {
+	for _, role := range allRoles {
 		rr, err := roleResource(role.F00926User, role.F00926RoleDesc)
 		if err != nil {
 			return nil, "", nil, fmt.Errorf("error creating role resource: %w", err)
@@ -63,7 +90,7 @@ func (r *roleBuilder) List(ctx context.Context, parentResourceID *v2.ResourceId,
 		rv = append(rv, rr)
 	}
 
-	return rv, "", nil, nil
+	return rv, nextToken, nil, nil
 }
 
 func (r *roleBuilder) Entitlements(_ context.Context, resource *v2.Resource, _ *pagination.Token) ([]*v2.Entitlement, string, annotations.Annotations, error) {
@@ -85,13 +112,38 @@ func (r *roleBuilder) Entitlements(_ context.Context, resource *v2.Resource, _ *
 }
 
 func (r *roleBuilder) Grants(ctx context.Context, resource *v2.Resource, pToken *pagination.Token) ([]*v2.Grant, string, annotations.Annotations, error) {
-	users, err := r.client.ListRoleUsers(ctx, resource.Id.Resource)
+	bag, page, isInitial, err := parsePageToken(pToken.Token, &v2.ResourceId{ResourceType: userResourceType.Id})
 	if err != nil {
-		return nil, "", nil, fmt.Errorf("error fetching role users: %w", err)
+		return nil, "", nil, err
+	}
+
+	var allUsers []jde.Columns
+	var nextToken string
+
+	if page == "" && isInitial {
+		users, nextUrl, err := r.client.ListRoleUsers(ctx, resource.Id.Resource, "100")
+		if err != nil {
+			return nil, "", nil, fmt.Errorf("error fetching role users: %w", err)
+		}
+		allUsers = append(allUsers, users...)
+		nextToken, err = bag.NextToken(nextUrl)
+		if err != nil {
+			return nil, "", nil, err
+		}
+	} else {
+		users, nextUrl, err := r.client.FetchMoreRoleUsers(ctx, page)
+		if err != nil {
+			return nil, "", nil, fmt.Errorf("error fetching role users: %w", err)
+		}
+		allUsers = append(allUsers, users...)
+		nextToken, err = bag.NextToken(nextUrl)
+		if err != nil {
+			return nil, "", nil, err
+		}
 	}
 
 	var rv []*v2.Grant
-	for _, user := range users {
+	for _, user := range allUsers {
 		ur, err := userResource(user.F95921ToRole)
 		if err != nil {
 			return nil, "", nil, fmt.Errorf("error creating user resource for role %s: %w", resource.Id.Resource, err)
@@ -103,7 +155,7 @@ func (r *roleBuilder) Grants(ctx context.Context, resource *v2.Resource, pToken 
 			ur.Id,
 		))
 	}
-	return rv, "", nil, nil
+	return rv, nextToken, nil, nil
 }
 
 func newRoleBuilder(client *jde.Client) *roleBuilder {

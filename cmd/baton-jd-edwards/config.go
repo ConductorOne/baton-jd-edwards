@@ -15,6 +15,7 @@ type config struct {
 	AisUrl   string `mapstructure:"ais-url"`
 	Username string `mapstructure:"username"`
 	Password string `mapstructure:"password"`
+	Env      string `mapstructure:"env"`
 }
 
 // validateConfig is run after the configuration is loaded, and should return an error if it isn't valid.
@@ -39,4 +40,5 @@ func cmdFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().String("ais-url", "", "Your JD Edwards AIS Server REST API url. Provided url should contain port. (e.g: https://your_ais_server:port)($BATON_AIS_URL)")
 	cmd.PersistentFlags().String("username", "", "JD Edwards EnterpriseOne username. ($BATON_USERNAME)")
 	cmd.PersistentFlags().String("password", "", "JD Edwards EnterpriseOne password. ($BATON_PASSWORD)")
+	cmd.PersistentFlags().String("env", "", "Environment to use for login. If not specified, the default environment configured for the AIS Server will be used. ($BATON_ENV)")
 }

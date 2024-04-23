@@ -45,13 +45,39 @@ func userResource(user string) (*v2.Resource, error) {
 }
 
 func (u *userBuilder) List(ctx context.Context, parentResourceID *v2.ResourceId, pToken *pagination.Token) ([]*v2.Resource, string, annotations.Annotations, error) {
-	users, err := u.client.ListUsers(ctx)
+	bag, page, isInitial, err := parsePageToken(pToken.Token, &v2.ResourceId{ResourceType: userResourceType.Id})
 	if err != nil {
-		return nil, "", nil, fmt.Errorf("error fetching users: %w", err)
+		return nil, "", nil, err
+	}
+
+	var allUsers []jde.Columns
+	var nextToken string
+	if page == "" && isInitial {
+		users, nextUrl, err := u.client.ListUsers(ctx, "100", true)
+		if err != nil {
+			return nil, "", nil, fmt.Errorf("error fetching users: %w", err)
+		}
+		allUsers = append(allUsers, users...)
+
+		nextToken, err = bag.NextToken(nextUrl)
+		if err != nil {
+			return nil, "", nil, err
+		}
+	} else {
+		users, nextUrl, err := u.client.FetchMoreUsers(ctx, page)
+		if err != nil {
+			return nil, "", nil, fmt.Errorf("error fetching users: %w", err)
+		}
+		allUsers = append(allUsers, users...)
+
+		nextToken, err = bag.NextToken(nextUrl)
+		if err != nil {
+			return nil, "", nil, err
+		}
 	}
 
 	var rv []*v2.Resource
-	for _, user := range users {
+	for _, user := range allUsers {
 		ur, err := userResource(user.F0092User)
 		if err != nil {
 			return nil, "", nil, fmt.Errorf("error creating user resource: %w", err)
@@ -59,7 +85,7 @@ func (u *userBuilder) List(ctx context.Context, parentResourceID *v2.ResourceId,
 		rv = append(rv, ur)
 	}
 
-	return rv, "", nil, nil
+	return rv, nextToken, nil, nil
 }
 
 // Entitlements always returns an empty slice for users.
