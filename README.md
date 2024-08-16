@@ -59,11 +59,12 @@ Usage:
   baton-jd-edwards [command]
 
 Available Commands:
+  capabilities       Get connector capabilities
   completion         Generate the autocompletion script for the specified shell
   help               Help about any command
 
 Flags:
-      --ais-url string         Your JD Edwards AIS Server REST API url. Provided url should contain port. (e.g: https://your_ais_server:port)($BATON_AIS_URL)
+      --ais-url string         required: Your JD Edwards AIS Server REST API url. Provided url should contain port. (e.g: https://your_ais_server:port). ($BATON_AIS_URL)
       --client-id string       The client ID used to authenticate with ConductorOne ($BATON_CLIENT_ID)
       --client-secret string   The client secret used to authenticate with ConductorOne ($BATON_CLIENT_SECRET)
       --env string             Environment to use for login. If not specified, the default environment configured for the AIS Server will be used. ($BATON_ENV)
@@ -71,9 +72,11 @@ Flags:
   -h, --help                   help for baton-jd-edwards
       --log-format string      The output format for logs: json, console ($BATON_LOG_FORMAT) (default "json")
       --log-level string       The log level: debug, info, warn, error ($BATON_LOG_LEVEL) (default "info")
-      --password string        JD Edwards EnterpriseOne password. ($BATON_PASSWORD)
-  -p, --provisioning           This must be set in order for provisioning actions to be enabled. ($BATON_PROVISIONING)
-      --username string        JD Edwards EnterpriseOne username. ($BATON_USERNAME)
+      --password string        required: JD Edwards EnterpriseOne password. ($BATON_PASSWORD)
+  -p, --provisioning           This must be set in order for provisioning actions to be enabled ($BATON_PROVISIONING)
+      --skip-full-sync         This must be set to skip a full sync ($BATON_SKIP_FULL_SYNC)
+      --ticketing              This must be set to enable ticketing support ($BATON_TICKETING)
+      --username string        required: JD Edwards EnterpriseOne username. ($BATON_USERNAME)
   -v, --version                version for baton-jd-edwards
 
 Use "baton-jd-edwards [command] --help" for more information about a command.
