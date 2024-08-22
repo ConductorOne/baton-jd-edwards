@@ -1,7 +1,11 @@
 # `baton-jd-edwards` [![Go Reference](https://pkg.go.dev/badge/github.com/conductorone/baton-jd-edwards.svg)](https://pkg.go.dev/github.com/conductorone/baton-jd-edwards) ![main ci](https://github.com/conductorone/baton-jd-edwards/actions/workflows/main.yaml/badge.svg)
 
-`baton-jd-edwards` is a connector for JD Edwards EnterpriseOne built using the [Baton SDK](https://github.com/conductorone/baton-sdk). It communicates with the JD Edwards EnterpriseOne Application Interface Services (AIS) Server REST APIs to sync data about users and roles.
-Check out [Baton](https://github.com/conductorone/baton) to learn more about the project in general.
+`baton-jd-edwards` is a connector for JD Edwards EnterpriseOne built using the 
+[Baton SDK](https://github.com/conductorone/baton-sdk). It communicates with the 
+JD Edwards EnterpriseOne Application Interface Services (AIS) Server REST APIs 
+to sync data about users and roles. Check out 
+[Baton](https://github.com/conductorone/baton) to learn more about the project 
+in general.
 
 # Getting Started
 

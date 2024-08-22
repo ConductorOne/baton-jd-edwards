@@ -3,7 +3,7 @@ module github.com/conductorone/baton-jd-edwards
 go 1.22.1
 
 require (
-	github.com/conductorone/baton-sdk v0.2.22
+	github.com/conductorone/baton-sdk v0.2.23
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0
 	github.com/spf13/viper v1.18.2
 	go.uber.org/zap v1.27.0
