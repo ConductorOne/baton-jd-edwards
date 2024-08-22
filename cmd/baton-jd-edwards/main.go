@@ -18,38 +18,6 @@ import (
 const (
 	version       = "dev"
 	connectorName = "baton-jd-edwards"
-	aisUrl        = "ais-url"
-	username      = "username"
-	password      = "password"
-	env           = "env"
-)
-
-var (
-	aisUrlField = field.StringField(
-		aisUrl,
-		field.WithRequired(true),
-		field.WithDescription("Your JD Edwards AIS Server REST API url. Provided url should contain port. (e.g: https://your_ais_server:port)."),
-	)
-	usernameField = field.StringField(
-		username,
-		field.WithRequired(true),
-		field.WithDescription("JD Edwards EnterpriseOne username."),
-	)
-	passwordField = field.StringField(
-		password,
-		field.WithRequired(true),
-		field.WithDescription("JD Edwards EnterpriseOne password."),
-	)
-	envField = field.StringField(
-		env,
-		field.WithDescription("Environment to use for login. If not specified, the default environment configured for the AIS Server will be used."),
-	)
-	configurationFields = []field.SchemaField{
-		aisUrlField,
-		usernameField,
-		passwordField,
-		envField,
-	}
 )
 
 func main() {
@@ -75,10 +43,10 @@ func main() {
 func getConnector(ctx context.Context, cfg *viper.Viper) (types.ConnectorServer, error) {
 	l := ctxzap.Extract(ctx)
 	cb, err := connector.New(ctx,
-		cfg.GetString(aisUrl),
-		cfg.GetString(username),
-		cfg.GetString(password),
-		cfg.GetString(env),
+		cfg.GetString(aisUrlField.FieldName),
+		cfg.GetString(usernameField.FieldName),
+		cfg.GetString(passwordField.FieldName),
+		cfg.GetString(envField.FieldName),
 	)
 	if err != nil {
 		l.Error("error creating connector", zap.Error(err))
