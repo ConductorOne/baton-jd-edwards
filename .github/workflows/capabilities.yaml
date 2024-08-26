@@ -24,6 +24,10 @@ jobs:
         run: go build -o connector ./cmd/baton-jd-edwards
 
       - name: Run and save output
+        env:
+          BATON_AIS_URL: ${{ secrets.AIS_URL }}
+          BATON_USERNAME: ${{ secrets.USERNAME }}
+          BATON_PASSWORD: ${{ secrets.PASSWORD }}
         run: ./connector capabilities > baton_capabilities.json
 
       - name: Commit changes

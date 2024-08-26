@@ -22,7 +22,8 @@ const (
 
 func main() {
 	ctx := context.Background()
-	_, cmd, err := configSchema.DefineConfiguration(ctx,
+	_, cmd, err := configSchema.DefineConfiguration(
+		ctx,
 		connectorName,
 		getConnector,
 		field.NewConfiguration(configurationFields),
