@@ -369,7 +369,7 @@ func GetConfig(ctx context.Context, ais string) (ConfigResponse, bool, string, e
 	return config, capabilityMissing, version, nil
 }
 
-// ValidateToken validates the current session token.
+// ValidateTokenV1 validates the current session token.
 func (c *Client) ValidateTokenV1(ctx context.Context) error {
 	_, _, err := c.ListUsers(ctx, "1", false)
 	if err != nil {
