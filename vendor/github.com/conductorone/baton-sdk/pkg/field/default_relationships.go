@@ -1,10 +1,13 @@
 package field
 
-var defaultRelationship = []SchemaFieldRelationship{
+var DefaultRelationships = []SchemaFieldRelationship{
 	FieldsRequiredTogether(grantEntitlementField, grantPrincipalField),
 	FieldsRequiredTogether(clientIDField, clientSecretField),
 	FieldsRequiredTogether(createTicketField, ticketTemplatePathField),
+	FieldsRequiredTogether(bulkCreateTicketField, bulkTicketTemplatePathField),
 	FieldsRequiredTogether(getTicketField, ticketIDField),
+	FieldsRequiredTogether(diffSyncsField, diffSyncsBaseSyncField, diffSyncsAppliedSyncField),
+	FieldsRequiredTogether(compactSyncsField, compactSyncIDsField, compactFilePathsField, compactOutputDirectoryField),
 	FieldsMutuallyExclusive(
 		grantEntitlementField,
 		revokeGrantField,
@@ -15,6 +18,7 @@ var defaultRelationship = []SchemaFieldRelationship{
 		createTicketField,
 		getTicketField,
 		ListTicketSchemasField,
+		bulkCreateTicketField,
 	),
 	FieldsMutuallyExclusive(
 		grantEntitlementField,
@@ -23,10 +27,20 @@ var defaultRelationship = []SchemaFieldRelationship{
 		deleteResourceTypeField,
 		rotateCredentialsTypeField,
 		eventFeedField,
+		diffSyncsField,
+		compactSyncsField,
 		ListTicketSchemasField,
+	),
+	FieldsDependentOn(
+		[]SchemaField{externalResourceEntitlementIdFilter},
+		[]SchemaField{externalResourceC1ZField},
+	),
+	FieldsDependentOn(
+		[]SchemaField{skipGrants},
+		[]SchemaField{targetedSyncResourceIDs},
 	),
 }
 
 func EnsureDefaultRelationships(original []SchemaFieldRelationship) []SchemaFieldRelationship {
-	return append(defaultRelationship, original...)
+	return append(DefaultRelationships, original...)
 }
