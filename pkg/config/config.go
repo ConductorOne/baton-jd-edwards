@@ -18,6 +18,7 @@ var (
 	PasswordField = field.StringField(
 		"password",
 		field.WithRequired(true),
+		field.WithIsSecret(true),
 		field.WithDescription("JD Edwards EnterpriseOne password."),
 	)
 	EnvField = field.StringField(
