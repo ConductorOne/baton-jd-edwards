@@ -1,17 +1,40 @@
 {
-  "@type":  "type.googleapis.com/c1.connector.v2.ConnectorCapabilities",
-  "resourceTypeCapabilities":  [
+  "@type": "type.googleapis.com/c1.connector.v2.ConnectorCapabilities",
+  "resourceTypeCapabilities": [
     {
-      "resourceType":  {
-        "id":  "user",
-        "displayName":  "User",
-        "traits":  [
-          "TRAIT_USER"
+      "resourceType": {
+        "id": "role",
+        "displayName": "Role",
+        "traits": [
+          "TRAIT_ROLE"
         ]
       },
-      "capabilities":  [
+      "capabilities": [
         "CAPABILITY_SYNC"
-      ]
+      ],
+      "permissions": {}
+    },
+    {
+      "resourceType": {
+        "id": "user",
+        "displayName": "User",
+        "traits": [
+          "TRAIT_USER"
+        ],
+        "annotations": [
+          {
+            "@type": "type.googleapis.com/c1.connector.v2.SkipEntitlementsAndGrants"
+          }
+        ]
+      },
+      "capabilities": [
+        "CAPABILITY_SYNC"
+      ],
+      "permissions": {}
     }
-  ]
+  ],
+  "connectorCapabilities": [
+    "CAPABILITY_SYNC"
+  ],
+  "credentialDetails": {}
 }
