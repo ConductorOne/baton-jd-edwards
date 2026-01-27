@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"github.com/conductorone/baton-sdk/pkg/field"
+	cfg "github.com/conductorone/baton-jd-edwards/pkg/config"
 	"github.com/conductorone/baton-sdk/pkg/test"
 	"github.com/conductorone/baton-sdk/pkg/ustrings"
 )
@@ -11,7 +11,7 @@ import (
 func TestConfigs(t *testing.T) {
 	test.ExerciseTestCasesFromExpressions(
 		t,
-		field.NewConfiguration(configurationFields),
+		cfg.Config,
 		nil,
 		ustrings.ParseFlags,
 		[]test.TestCaseFromExpression{
