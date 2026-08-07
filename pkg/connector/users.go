@@ -26,16 +26,15 @@ func userResource(user string) (*v2.Resource, error) {
 		"user_id": user,
 	}
 
-	userTraitOptions := []rs.UserTraitOption{
-		rs.WithUserProfile(profile),
-		rs.WithStatus(v2.UserTrait_Status_STATUS_ENABLED),
-	}
+	userTraitOptions := []rs.UserTraitOption{}
 
 	ret, err := rs.NewUserResource(
 		user,
 		userResourceType,
 		user,
 		userTraitOptions,
+		rs.WithResourceProfile(profile),
+		rs.WithResourceStatus(v2.Status_RESOURCE_STATUS_ENABLED, ""),
 	)
 	if err != nil {
 		return nil, err
