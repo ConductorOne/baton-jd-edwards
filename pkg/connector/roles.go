@@ -31,15 +31,14 @@ func roleResource(role, roleDescription string) (*v2.Resource, error) {
 		"role_description": roleDescription,
 	}
 
-	roleTraitOptions := []rs.RoleTraitOption{
-		rs.WithRoleProfile(profile),
-	}
+	roleTraitOptions := []rs.RoleTraitOption{}
 
 	ret, err := rs.NewRoleResource(
 		role,
 		roleResourceType,
 		role,
 		roleTraitOptions,
+		rs.WithResourceProfile(profile),
 	)
 	if err != nil {
 		return nil, err
